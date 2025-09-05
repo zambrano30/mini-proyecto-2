@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from '../tools/axios';
 import { geoApiInstance } from '../tools/axios/geoApi';
+import { SearchModal } from "./SearchModal";
 
 export const TodayInformation = () => {
   const [weather, setWeather] = useState(null);
@@ -8,6 +9,7 @@ export const TodayInformation = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
 
   const getCurrentWeather = async (lat, lon) => {
     try {
@@ -83,51 +85,15 @@ export const TodayInformation = () => {
         </section>
 
         {/* Modal de búsqueda */}
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div className="bg-blue-950 p-6 rounded-lg w-96 relative">
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="absolute top-4 right-4 text-white"
-              >
-                <img src="../close.svg" alt="Close" className="size-6" />
-              </button>
-              
-              <div className="flex gap-2 mb-4">
-                <input
-                  type="text"
-                  placeholder="Search location"
-                  className="bg-slate-400 px-4 py-2 rounded-lg flex-grow text-white placeholder-white"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  autoFocus
-                />
-                <button 
-                  onClick={handleSearch}
-                  className="bg-slate-600 px-4 py-2 rounded-lg text-white hover:bg-slate-700"
-                >
-                  Search
-                </button>
-              </div>
-
-              {searchResults.length > 0 && (
-                <div className="max-h-96 overflow-y-auto">
-                  {searchResults.map((city, index) => (
-                    <div
-                      key={index}
-                      className="p-4 hover:bg-slate-800 cursor-pointer text-white border-b border-slate-700"
-                      onClick={() => handleCitySelect(city)}
-                    >
-                      {city.name}, {city.country}
-                      {city.state && `, ${city.state}`}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        <SearchModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          searchResults={searchResults}
+          handleSearch={handleSearch}
+          handleCitySelect={handleCitySelect}
+        />
         <img
           src=".//Cloud-background.png"
           alt="Nubes de fondo"
