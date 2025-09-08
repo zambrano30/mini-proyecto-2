@@ -5,6 +5,7 @@ import { SearchModal } from "./SearchModal";
 
 export const TodayInformation = () => {
   const [weather, setWeather] = useState(null);
+  const [forecast, setForecast] = useState(null);
   const [location, setLocation] = useState({ lat: -1.0278, lon: -79.4647 }); // Default to Quevedo coordinates
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -47,6 +48,67 @@ export const TodayInformation = () => {
     }
   };
 
+  const getForecast = async (lat, lon) => {
+    try {
+      const response = await axiosInstance.get('/forecast', {
+        params: {
+          lat,
+          lon,
+          units: 'metric'
+        }
+      });
+
+     
+      const days = [];
+      const today = new Date();
+      for (let i = 1; i <= 5; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        date.setHours(12, 0, 0, 0); // Set to noon
+        days.push(date);
+      }
+
+      //
+      const processedForecasts = days.map(targetDate => {
+        // Convert all forecasts to Date objects once
+        const forecastsWithDates = response.data.list.map(item => ({
+          ...item,
+          dateObj: new Date(item.dt * 1000)
+        }));
+
+        // Find the forecast closest to noon for this day
+        return forecastsWithDates.reduce((closest, current) => {
+          if (!closest) return current;
+
+          const currentDate = current.dateObj;
+          const closestDate = closest.dateObj;
+
+          // Check if they're the same day as target
+          const isCurrentSameDay = currentDate.getDate() === targetDate.getDate();
+          const isClosestSameDay = closestDate.getDate() === targetDate.getDate();
+
+          if (!isClosestSameDay && isCurrentSameDay) return current;
+          if (!isCurrentSameDay && isClosestSameDay) return closest;
+          if (!isCurrentSameDay && !isClosestSameDay) {
+            // Neither is on the target day, pick the closest one
+            return Math.abs(currentDate - targetDate) < Math.abs(closestDate - targetDate) 
+              ? current : closest;
+          }
+
+          // Both are on the target day, pick the one closest to noon
+          const currentDiff = Math.abs(currentDate.getHours() - 12);
+          const closestDiff = Math.abs(closestDate.getHours() - 12);
+          return currentDiff < closestDiff ? current : closest;
+        }, null);
+      });
+
+      console.log('Processed forecasts:', processedForecasts);
+      setForecast(processedForecasts);
+    } catch (error) {
+      console.error('Error fetching forecast:', error);
+    }
+  };
+
   const handleLocationClick = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -54,6 +116,7 @@ export const TodayInformation = () => {
           const { latitude, longitude } = position.coords;
           setLocation({ lat: latitude, lon: longitude });
           getCurrentWeather(latitude, longitude);
+          getForecast(latitude, longitude);
         },
         (error) => {
           console.error('Error getting location:', error);
@@ -86,7 +149,12 @@ export const TodayInformation = () => {
   };
 
   useEffect(() => {
-    getCurrentWeather(location.lat, location.lon);
+    const fetchData = async () => {
+      console.log('Fetching data for location:', location);
+      await getCurrentWeather(location.lat, location.lon);
+      await getForecast(location.lat, location.lon);
+    };
+    fetchData();
   }, [location]);
 
   return (
@@ -161,18 +229,39 @@ export const TodayInformation = () => {
               </section>
             </section>
             <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 text-white text-center">
-              <section className="bg-slate-800 w-full max-w-[150px] h-40 p-3 sm:p-4">
-                <p className="text-sm sm:text-base text-gray-300">Today</p>
-                <img 
-                  className="size-16 sm:size-20 mx-auto my-2" 
-                  src="09d.png" 
-                  alt="Weather icon" 
-                />
-                <div className="flex justify-around mt-2">
-                  <p className="text-sm sm:text-base">32°C</p>
-                  <p className="text-sm sm:text-base text-gray-400">21°C</p>
+              {/* Forecast cards */}
+              {forecast && forecast.length > 0 ? (
+                forecast.map((day, index) => {
+                  const date = new Date(day.dt * 1000);
+                  const isFirstCard = index === 0;
+                  return (
+                    <section key={day.dt} className="bg-slate-800 w-full max-w-[180px] min-h-[11rem] p-4 sm:p-5 rounded-lg hover:bg-slate-700 transition-all duration-300 transform hover:scale-105">
+                      <p className="text-sm sm:text-base font-medium mb-3 text-gray-300">
+                        {isFirstCard ? 'Tomorrow' : date.toLocaleDateString('en-US', { weekday: 'long' })}
+                      </p>
+                      <div className="flex flex-col items-center">
+                        <img 
+                          className="size-20 sm:size-24 my-2 drop-shadow-lg transform hover:scale-110 transition-transform duration-300" 
+                          src={weatherIcons[day.weather[0].icon]} 
+                          alt={day.weather[0].description} 
+                        />
+                        <p className="text-xs sm:text-sm text-gray-400 mt-1 capitalize">
+                          {day.weather[0].description}
+                        </p>
+                      </div>
+                      <div className="flex justify-around items-center mt-3 pt-2 border-t border-gray-700">
+                        <p className="text-sm sm:text-base font-medium">{Math.round(day.main.temp_max)}°C</p>
+                        <span className="text-gray-600 mx-2">|</span>
+                        <p className="text-sm sm:text-base text-gray-400">{Math.round(day.main.temp_min)}°C</p>
+                      </div>
+                    </section>
+                  );
+                })
+              ) : (
+                <div className="col-span-full flex justify-center">
+                  <p className="text-white">Loading forecast data...</p>
                 </div>
-              </section>
+              )}
             </section>
           </section>
 
