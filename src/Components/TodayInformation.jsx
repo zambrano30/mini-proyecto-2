@@ -92,8 +92,8 @@ export const TodayInformation = () => {
     getCurrentWeather(location.lat, location.lon);
   }, [location]);
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col lg:grid lg:grid-cols-[400px_1fr] lg:gap-6 overflow-y-auto lg:overflow-hidden">
-      <aside className="bg-blue-950 min-h-[500px] lg:h-screen lg:bg-opacity-50 flex flex-col">
+    <div className="h-screen bg-gray-950 grid lg:grid-cols-[400px_1fr] overflow-hidden">
+      <aside className="bg-blue-950 lg:bg-opacity-50 flex flex-col">
         <section className="flex justify-around p-4">
           <button
             onClick={() => setIsModalOpen(true)}
@@ -150,69 +150,70 @@ export const TodayInformation = () => {
         </div>
       </aside>
       
-      <main className="bg-gray-950 bg-opacity-50 min-h-[500px] lg:h-screen overflow-y-auto flex flex-col lg:px-24">
-        {/* Sección superior con el pronóstico */}
-        <section className="p-4 md:p-6 lg:p-8">
-          <section className="flex justify-end font-bold text-white gap-4">
-            <section className="border rounded-full text-2xl flex items-center justify-center size-12 hover:bg-slate-800 cursor-pointer transition-colors">
-              °C
+      <main className="bg-gray-950 bg-opacity-50 flex flex-col h-screen">
+        <div className="flex-1 overflow-y-auto lg:px-24">
+          {/* Sección superior con el pronóstico */}
+          <section className="p-4 md:p-6 lg:p-8">
+            <section className="flex justify-end font-bold text-white gap-4">
+              <section className="border rounded-full text-2xl flex items-center justify-center size-12 hover:bg-slate-800 cursor-pointer transition-colors">
+                °C
+              </section>
+              <section className="border rounded-full text-2xl flex items-center justify-center size-12 hover:bg-slate-800 cursor-pointer transition-colors">
+                °F
+              </section>
             </section>
-            <section className="border rounded-full text-2xl flex items-center justify-center size-12 hover:bg-slate-800 cursor-pointer transition-colors">
-              °F
-            </section>
-          </section>
-          <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 place-content-center place-items-center gap-3 md:gap-4 lg:gap-6 text-white text-center mt-8">
-            <section className="bg-slate-800 w-30 h-40">
-              <p>Today</p>
-              <img 
-                className="size-20 mx-auto" 
-                src="09d.png" 
-                alt="Weather icon" 
-              />
-              <div className="flex justify-around mt-4">
-                <p>32°C</p>
-                <p>21°C</p>
-              </div>
-            </section>
-          </section>
-        </section>
-
-        {/* Sección inferior con los highlights */}
-        <section className="text-white p-4 md:p-6 lg:p-8 flex-grow">
-          <h2 className="text-2xl font-bold mb-4 md:mb-6">Today's Highlights</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            <section className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-colors">
-              <p className="text-lg text-gray-300 mb-2">Wind Status</p>
-              <p className="text-4xl font-bold mb-4">5.66 <span className="text-2xl text-gray-300">mph</span></p>
-              <div className="flex justify-center items-center gap-3">
-                <div className="bg-slate-700 p-2 rounded-full">
-                  <img src="./navigation.svg" alt="" className="size-6" />
+            <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 place-content-center place-items-center gap-3 md:gap-4 lg:gap-6 text-white text-center mt-8">
+              <section className="bg-slate-800 w-30 h-40">
+                <p>Today</p>
+                <img 
+                  className="size-20 mx-auto" 
+                  src="09d.png" 
+                  alt="Weather icon" 
+                />
+                <div className="flex justify-around mt-4">
+                  <p>32°C</p>
+                  <p>21°C</p>
                 </div>
-                <p className="text-lg">SSW</p>
-              </div>
+              </section>
             </section>
-            <section className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-colors">
-              <p className="text-lg text-gray-300 mb-2">Humidity</p>
-              <p className="text-4xl font-bold mb-4">84<span className="text-2xl text-gray-300">%</span></p>
-              <div className="w-full bg-gray-700 rounded-full h-2">
-                <div className="bg-yellow-400 h-2 rounded-full transition-all duration-500" style={{ width: '84%' }}></div>
-              </div>
-            </section>
-            <section className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-colors">
-              <p className="text-lg text-gray-300 mb-2">Visibility</p>
-              <p className="text-4xl font-bold">6.4 <span className="text-2xl text-gray-300">miles</span></p>
-            </section>
-            <section className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-colors">
-              <p className="text-lg text-gray-300 mb-2">Air Pressure</p>
-              <p className="text-4xl font-bold">998 <span className="text-2xl text-gray-300">mb</span></p>
-            </section>
-          </div>
-        </section>
-      </main>
+          </section>
 
-      <footer className="bg-blue-950 bg-opacity-50 text-white text-center p-1 lg:col-span-2">
-        <p>Developed by <span className="font-semibold">Christopher Zambrano</span></p>
-      </footer>
+          {/* Sección inferior con los highlights */}
+          <section className="text-white p-4 md:p-6 lg:p-8">
+            <h2 className="text-2xl font-bold mb-4 md:mb-6">Today's Highlights</h2>
+            <div className="grid md:grid-cols-2 gap-4 mb-4">
+              <section className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-colors">
+                <p className="text-lg text-gray-300 mb-2">Wind Status</p>
+                <p className="text-4xl font-bold mb-4">5.66 <span className="text-2xl text-gray-300">mph</span></p>
+                <div className="flex justify-center items-center gap-3">
+                  <div className="bg-slate-700 p-2 rounded-full">
+                    <img src="./navigation.svg" alt="" className="size-6" />
+                  </div>
+                  <p className="text-lg">SSW</p>
+                </div>
+              </section>
+              <section className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-colors">
+                <p className="text-lg text-gray-300 mb-2">Humidity</p>
+                <p className="text-4xl font-bold mb-4">84<span className="text-2xl text-gray-300">%</span></p>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div className="bg-yellow-400 h-2 rounded-full transition-all duration-500" style={{ width: '84%' }}></div>
+                </div>
+              </section>
+              <section className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-colors">
+                <p className="text-lg text-gray-300 mb-2">Visibility</p>
+                <p className="text-4xl font-bold">6.4 <span className="text-2xl text-gray-300">miles</span></p>
+              </section>
+              <section className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-colors">
+                <p className="text-lg text-gray-300 mb-2">Air Pressure</p>
+                <p className="text-4xl font-bold">998 <span className="text-2xl text-gray-300">mb</span></p>
+              </section>
+            </div>
+            <footer className="text-white text-center py-4">
+              <p>Developed by <span className="font-semibold">Christopher Zambrano</span></p>
+            </footer>
+          </section>
+        </div>
+      </main>
     </div>
   );
 };
