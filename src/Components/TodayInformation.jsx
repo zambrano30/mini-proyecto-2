@@ -158,8 +158,8 @@ export const TodayInformation = () => {
   }, [location]);
 
   return (
-    <div className="min-h-screen lg:h-screen bg-gray-950 flex flex-col lg:grid lg:grid-cols-[400px_1fr]">
-      <aside className="bg-blue-950 lg:bg-opacity-50 flex flex-col p-4 lg:p-6 min-w-0">
+    <div className="min-h-screen lg:h-screen bg-gray-950 flex flex-col lg:grid lg:grid-cols-[400px_1fr] lg:overflow-hidden">
+      <aside className="bg-blue-950 lg:bg-opacity-50 flex flex-col p-4 lg:p-6 min-w-0 lg:overflow-y-auto">
         <section className="flex justify-between gap-2">
           <button
             onClick={() => setIsModalOpen(true)}
@@ -216,11 +216,11 @@ export const TodayInformation = () => {
         </div>
       </aside>
       
-      <main className="bg-gray-950 bg-opacity-50 flex-1">
-        <div className="p-4 lg:p-10">
+      <main className="bg-gray-950 bg-opacity-50 flex-1 lg:overflow-y-auto">
+        <div className="p-4 lg:p-10 lg:h-full lg:overflow-y-auto">
           {/* Sección superior con el pronóstico */}
-          <section className="mb-6 sm:mb-8">
-            <section className="flex justify-end font-bold text-white gap-2 sm:gap-4 mb-8">
+          <section className="mb-6 sm:mb-8 lg:mb-6">
+            <section className="flex justify-end font-bold text-white gap-2 sm:gap-4 mb-6 lg:mb-4">
               <section className="border rounded-full text-xl sm:text-2xl flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 hover:bg-slate-800 cursor-pointer transition-colors">
                 °C
               </section>
@@ -267,17 +267,35 @@ export const TodayInformation = () => {
 
           {/* Sección inferior con los highlights */}
           <section className="text-white">
-            <h2 className="text-xl sm:text-2xl font-bold mb-6">Today's Highlights</h2>
-            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 lg:mb-6">Today's Highlights</h2>
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-4 lg:mb-6">
               <section className="bg-slate-800 p-6 sm:p-8 rounded-lg hover:bg-slate-700 transition-colors">
                 <p className="text-sm sm:text-base text-gray-300 mb-2">Wind Status</p>
-                <p className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">5.66 <span className="text-xl sm:text-2xl text-gray-300">mph</span></p>
-                <div className="flex justify-center items-center gap-3">
-                  <div className="bg-slate-700 p-2 rounded-full">
-                    <img src="./navigation.svg" alt="" className="size-5 sm:size-6" />
-                  </div>
-                  <p className="text-base sm:text-lg">SSW</p>
-                </div>
+                {weather && (
+                  <>
+                    <p className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">
+                      {Math.round(weather.wind.speed)} <span className="text-xl sm:text-2xl text-gray-300">mph</span>
+                    </p>
+                    <div className="flex justify-center items-center gap-3">
+                      <div className="bg-slate-700 p-2 rounded-full">
+                        <img 
+                          src="./navigation.svg" 
+                          alt="Wind direction" 
+                          className="size-5 sm:size-6 transition-transform duration-500" 
+                          style={{ transform: `rotate(${weather.wind.deg}deg)` }}
+                        />
+                      </div>
+                      <p className="text-base sm:text-lg">
+                        {(() => {
+                          const deg = weather.wind.deg;
+                          const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+                          const index = Math.round(deg / 22.5) % 16;
+                          return directions[index];
+                        })()}
+                      </p>
+                    </div>
+                  </>
+                )}
               </section>
               <section className="bg-slate-800 p-6 sm:p-8 rounded-lg hover:bg-slate-700 transition-colors">
                 <p className="text-sm sm:text-base text-gray-300 mb-2">Humidity</p>
