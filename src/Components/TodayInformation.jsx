@@ -9,6 +9,28 @@ export const TodayInformation = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Weather icon mapping based on OpenWeather codes
+  const weatherIcons = {
+    '01d': '01d.png', // clear sky day
+    '01n': '01n.png', // clear sky night
+    '02d': '02d.png', // few clouds day
+    '02n': '02n.png', // few clouds night
+    '03d': '03d.png', // scattered clouds day
+    '03n': '03n.png', // scattered clouds night
+    '04d': '04d.png', // broken clouds day
+    '04n': '04n.png', // broken clouds night
+    '09d': '09d.png', // shower rain day
+    '09n': '09n.png', // shower rain night
+    '10d': '10d.png', // rain day
+    '10n': '10n.png', // rain night
+    '11d': '11d.png', // thunderstorm day
+    '11n': '11n.png', // thunderstorm night
+    '13d': '13d.png', // snow day
+    '13n': '13n.png', // snow night
+    '50d': '50d.png', // mist day
+    '50n': '50n.png', // mist night
+  };
   
 
   const getCurrentWeather = async (lat, lon) => {
@@ -94,121 +116,38 @@ export const TodayInformation = () => {
           handleSearch={handleSearch}
           handleCitySelect={handleCitySelect}
         />
-        <img
-          src=".//Cloud-background.png"
-          alt="Nubes de fondo"
-          className=" opacity-10 "
-        />
-        <img
-          src="01d.png"
-          alt="Cielo despejado día"
-          className="absolute top-20 left-23 w-40 hidden "
-        />
-        <img
-          src="01n.png"
-          alt="Cielo despejado noche"
-          className=" w-40 absolute top-20 left-25 "
-        />
-        <img
-          src="02d.png"
-          alt="Pocas nubes día"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="02n.png"
-          alt="Pocas nubes noche"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="03d.png"
-          alt="Nubes dispersas día"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="03n.png"
-          alt="Nubes dispersas noche"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="04d.png"
-          alt="Nubes rotas día"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="04n.png"
-          alt="Nubes rotas noche"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-
-        <img
-          src="09d.png"
-          alt="Chubascos día"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="09n.png"
-          alt="Chubascos noche"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="10d.png"
-          alt="Tormenta día"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="10n.png"
-          alt="Tormenta noche"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="11d.png"
-          alt="Nieve día"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="11n.png"
-          alt="Nieve noche"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="13d.png"
-          alt="Granizo día"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="13n.png"
-          alt="Granizo noche"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="50d.png"
-          alt="Niebla densa día"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-        <img
-          src="50n.png"
-          alt="Niebla densa noche"
-          className=" w-40 absolute top-20 left-25 hidden"
-        />
-
-        {weather && (
-          <>
-            <h2 className="text-center text-9xl font-bold text-white">
-              {Math.round(weather.main.temp)}<span className="text-6xl relative bottom-8 right-3">°C</span>
-            </h2>
-            <p className="text-center text-gray-200 mt-2 text-4xl">
-              {weather.weather[0].description}
-            </p>
-            <div className="flex justify-center gap-8 mt-4 text-gray-200">
-              <p>Today</p>
-              <p>{new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</p>
+        <div className="relative flex-grow">
+          <img
+            src=".//Cloud-background.png"
+            alt="Nubes de fondo"
+            className="opacity-10 w-full h-full absolute top-0 left-0 object-cover"
+          />
+          {weather && (
+            <div className="relative z-10">
+              <div className="flex justify-center">
+                <img
+                  src={weatherIcons[weather.weather[0].icon]}
+                  alt={weather.weather[0].description}
+                  className="w-52 h-52 my-10"
+                />
+              </div>
+              <h2 className="text-center text-9xl font-bold text-white">
+                {Math.round(weather.main.temp)}<span className="text-6xl relative bottom-8 right-3">°C</span>
+              </h2>
+              <p className="text-center text-gray-200 mt-2 text-4xl capitalize">
+                {weather.weather[0].description}
+              </p>
+              <div className="flex justify-center gap-8 mt-4 text-gray-200">
+                <p>Today</p>
+                <p>{new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</p>
+              </div>
+              <div className="flex justify-center text-gray-100 mt-4 mb-2 gap-2">
+                <img src=".//location_on.svg" alt="" className="size-5" />
+                <p>{weather.name}</p>
+              </div>
             </div>
-            <div className="flex justify-center text-gray-100 mt-4 mb-2 gap-2">
-              <img src=".//location_on.svg" alt="" className="size-5" />
-              <p>{weather.name}</p>
-            </div>
-          </>
-        )}
+          )}
+        </div>
       </aside>
       
       <main className="bg-gray-950 bg-opacity-50 min-h-[500px] lg:h-screen overflow-y-auto flex flex-col lg:px-24">
@@ -225,39 +164,11 @@ export const TodayInformation = () => {
           <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 place-content-center place-items-center gap-3 md:gap-4 lg:gap-6 text-white text-center mt-8">
             <section className="bg-slate-800 w-30 h-40">
               <p>Today</p>
-              <img className="size-20 mx-auto" src="09d.png" alt="" />
-              <div className="flex justify-around mt-4">
-                <p>32°C</p>
-                <p>21°C</p>
-              </div>
-            </section>
-            <section className="bg-slate-800 w-30 h-40">
-              <p>Today</p>
-              <img className="size-20 mx-auto" src="09d.png" alt="" />
-              <div className="flex justify-around mt-4">
-                <p>32°C</p>
-                <p>21°C</p>
-              </div>
-            </section>
-            <section className="bg-slate-800 w-30 h-40">
-              <p>Today</p>
-              <img className="size-20 mx-auto" src="09d.png" alt="" />
-              <div className="flex justify-around mt-4">
-                <p>32°C</p>
-                <p>21°C</p>
-              </div>
-            </section>
-            <section className="bg-slate-800 w-30 h-40">
-              <p>Today</p>
-              <img className="size-20 mx-auto" src="09d.png" alt="" />
-              <div className="flex justify-around mt-4">
-                <p>32°C</p>
-                <p>21°C</p>
-              </div>
-            </section>
-            <section className="bg-slate-800 w-30 h-40">
-              <p>Today</p>
-              <img className="size-20 mx-auto" src="09d.png" alt="" />
+              <img 
+                className="size-20 mx-auto" 
+                src="09d.png" 
+                alt="Weather icon" 
+              />
               <div className="flex justify-around mt-4">
                 <p>32°C</p>
                 <p>21°C</p>
