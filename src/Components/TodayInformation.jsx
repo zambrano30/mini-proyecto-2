@@ -166,7 +166,7 @@ export const TodayInformation = () => {
   }, [location]);
 
   return (
-    <div className="min-h-screen lg:h-screen bg-gray-950 flex flex-col lg:grid lg:grid-cols-[400px_1fr] lg:overflow-hidden">
+    <div className="min-h-screen lg:h-screen bg-gray-950 flex flex-col lg:grid lg:grid-cols-[400px_1fr] lg:overflow-hidden font-epunda">
       <aside className="bg-blue-950 lg:bg-opacity-50 flex flex-col p-4 lg:p-6 min-w-0 lg:overflow-y-auto">
         <section className="flex justify-between gap-2">
           <button
@@ -205,8 +205,11 @@ export const TodayInformation = () => {
                   className="w-40 sm:w-52 h-40 sm:h-52 my-6 sm:my-10"
                 />
               </div>
-              <h2 className="text-center text-7xl sm:text-9xl font-bold text-white">
-                {formatTemperature(weather.main.temp)}<span className="text-4xl sm:text-6xl relative bottom-6 sm:bottom-8 right-2 sm:right-3">°{isCelsius ? 'C' : 'F'}</span>
+              <h2 className="text-center text-7xl sm:text-9xl font-bold text-white tracking-wider">
+                {formatTemperature(weather.main.temp)}
+                <span className="text-4xl sm:text-6xl relative bottom-6 sm:bottom-8 right-1 sm:right-2 ml-4">
+                  °{isCelsius ? 'C' : 'F'}
+                </span>
               </h2>
               <p className="text-center text-gray-200 mt-2 text-3xl sm:text-4xl capitalize">
                 {weather.weather[0].description}
@@ -224,10 +227,10 @@ export const TodayInformation = () => {
         </div>
       </aside>
       
-      <main className="bg-gray-950 bg-opacity-50 flex-1 lg:overflow-y-auto">
-        <div className="p-4 lg:p-10 lg:h-full lg:overflow-y-auto">
+      <main className="bg-gray-950 bg-opacity-50 flex-1">
+        <div className="p-4 lg:p-8 h-full flex flex-col">
           {/* Sección superior con el pronóstico */}
-          <section className="mb-6 sm:mb-8 lg:mb-6">
+          <section className="mb-6 sm:mb-8 lg:mb-4 flex-shrink-0">
             <section className="flex justify-end font-bold text-white gap-2 sm:gap-4 mb-6 lg:mb-4">
               <button
                 onClick={() => setIsCelsius(true)}
@@ -286,9 +289,9 @@ export const TodayInformation = () => {
           </section>
 
           {/* Sección inferior con los highlights */}
-          <section className="text-white">
-            <h2 className="text-xl sm:text-2xl font-bold mb-4 lg:mb-6">Today's Highlights</h2>
-            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-4 lg:mb-6">
+          <section className="text-white mt-auto">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Today's Highlights</h2>
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
               <section className="bg-slate-800 p-6 sm:p-8 rounded-lg hover:bg-slate-700 transition-colors">
                 <p className="text-sm sm:text-base text-gray-300 mb-2">Wind Status</p>
                 {weather && (
@@ -333,7 +336,7 @@ export const TodayInformation = () => {
                 <p className="text-3xl sm:text-4xl font-bold">998 <span className="text-xl sm:text-2xl text-gray-300">mb</span></p>
               </section>
             </div>
-            <footer className="text-white text-center pb-4">
+            <footer className="text-white text-center mt-2">
               <p className="text-sm sm:text-base">Developed by <span className="font-semibold">Christopher Zambrano</span></p>
             </footer>
           </section>
