@@ -6,10 +6,18 @@ import { SearchModal } from "./SearchModal";
 export const TodayInformation = () => {
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
-  const [location, setLocation] = useState({ lat: -1.0278, lon: -79.4647 }); // Default to Quevedo coordinates
+  const [location, setLocation] = useState({ lat: -1.0278, lon: -79.4647 }); 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCelsius, setIsCelsius] = useState(true);
+
+  // Temperature conversion functions
+  const convertToFahrenheit = (celsius) => (celsius * 9/5) + 32;
+  const formatTemperature = (celsius) => {
+    const temp = isCelsius ? celsius : convertToFahrenheit(celsius);
+    return Math.round(temp);
+  };
 
   // Weather icon mapping based on OpenWeather codes
   const weatherIcons = {
@@ -198,7 +206,7 @@ export const TodayInformation = () => {
                 />
               </div>
               <h2 className="text-center text-7xl sm:text-9xl font-bold text-white">
-                {Math.round(weather.main.temp)}<span className="text-4xl sm:text-6xl relative bottom-6 sm:bottom-8 right-2 sm:right-3">°C</span>
+                {formatTemperature(weather.main.temp)}<span className="text-4xl sm:text-6xl relative bottom-6 sm:bottom-8 right-2 sm:right-3">°{isCelsius ? 'C' : 'F'}</span>
               </h2>
               <p className="text-center text-gray-200 mt-2 text-3xl sm:text-4xl capitalize">
                 {weather.weather[0].description}
@@ -221,12 +229,24 @@ export const TodayInformation = () => {
           {/* Sección superior con el pronóstico */}
           <section className="mb-6 sm:mb-8 lg:mb-6">
             <section className="flex justify-end font-bold text-white gap-2 sm:gap-4 mb-6 lg:mb-4">
-              <section className="border rounded-full text-xl sm:text-2xl flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 hover:bg-slate-800 cursor-pointer transition-colors">
+              <button
+                onClick={() => setIsCelsius(true)}
+                className={`border rounded-full text-xl sm:text-2xl flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 transition-colors ${
+                  isCelsius ? 'bg-slate-800 border-transparent' : 'hover:bg-slate-800/50'
+                }`}
+                aria-label="Switch to Celsius"
+              >
                 °C
-              </section>
-              <section className="border rounded-full text-xl sm:text-2xl flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 hover:bg-slate-800 cursor-pointer transition-colors">
+              </button>
+              <button
+                onClick={() => setIsCelsius(false)}
+                className={`border rounded-full text-xl sm:text-2xl flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 transition-colors ${
+                  !isCelsius ? 'bg-slate-800 border-transparent' : 'hover:bg-slate-800/50'
+                }`}
+                aria-label="Switch to Fahrenheit"
+              >
                 °F
-              </section>
+              </button>
             </section>
             <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 text-white text-center">
               {/* Forecast cards */}
@@ -250,9 +270,9 @@ export const TodayInformation = () => {
                         </p>
                       </div>
                       <div className="flex justify-around items-center mt-3 pt-2 border-t border-gray-700">
-                        <p className="text-sm sm:text-base font-medium">{Math.round(day.main.temp_max)}°C</p>
+                        <p className="text-sm sm:text-base font-medium">{formatTemperature(day.main.temp_max)}°{isCelsius ? 'C' : 'F'}</p>
                         <span className="text-gray-600 mx-2">|</span>
-                        <p className="text-sm sm:text-base text-gray-400">{Math.round(day.main.temp_min)}°C</p>
+                        <p className="text-sm sm:text-base text-gray-400">{formatTemperature(day.main.temp_min)}°{isCelsius ? 'C' : 'F'}</p>
                       </div>
                     </section>
                   );
